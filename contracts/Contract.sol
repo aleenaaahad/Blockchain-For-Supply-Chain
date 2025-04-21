@@ -7,6 +7,7 @@ contract TrackShipment {
     struct Product {
         uint ID;
         uint Inventory_Level;
+        string Shipment_Status; 
 
     }
     struct Transaction {
@@ -18,6 +19,7 @@ contract TrackShipment {
         address receiver; 
         string location;  
         string Shipment_Status;
+        string Asset_ID; 
 
     }
 }
