@@ -13,6 +13,11 @@ contract TrackShipment {
         uint User_Transaction_Amount;
         string Logistics_Delay_Reason;
         uint Timestamp;
+        address sender;
+        address receiver; 
+        string location;  
+        string Shipment_Status;
+
     }
 }
 
