@@ -1,0 +1,10 @@
+{
+  "_format": "hh-sol-artifact-1",
+  "contractName": "TrackShipment",
+  "sourceName": "contracts/Contract.sol",
+  "abi": [],
+  "bytecode": "0x6080604052348015600f57600080fd5b50603f80601d6000396000f3fe6080604052600080fdfea2646970667358221220d5c35ed8d23dba804452cfaea7ddfa8b74a1c8601f27133f764cad75813253f364736f6c634300081c0033",
+  "deployedBytecode": "0x6080604052600080fdfea2646970667358221220d5c35ed8d23dba804452cfaea7ddfa8b74a1c8601f27133f764cad75813253f364736f6c634300081c0033",
+  "linkReferences": {},
+  "deployedLinkReferences": {}
+}
