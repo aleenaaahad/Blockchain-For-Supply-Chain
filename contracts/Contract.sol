@@ -11,6 +11,7 @@ contract TrackShipment {
     }
     struct Transaction {
         uint User_Transaction_Amount;
+        bool Logistics_Delay;
         string Logistics_Delay_Reason;
         uint Timestamp;
         address sender;
