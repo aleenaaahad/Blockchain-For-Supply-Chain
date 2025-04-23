@@ -22,6 +22,11 @@ contract TrackShipment {
         string Asset_ID; 
 
     }
+  
+mapping(uint => Product) public products;
+
+mapping(uint => Transaction[]) public productTransactions;
+
 }
 
 
