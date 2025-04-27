@@ -55,6 +55,10 @@ function addTransaction(
     productTransactions[_productID].push(newTransaction);
 }
 
+function getTransactions(uint _productID) public view returns (Transaction[] memory) {
+    return productTransactions[_productID];
+}
+
 
 }
 
