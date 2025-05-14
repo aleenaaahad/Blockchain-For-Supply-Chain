@@ -6,35 +6,10 @@ import {
   Input,
   Heading,
   VStack,
-  Textarea,
   Text,
-  ChakraProvider,
-  extendTheme,
   useToast,
 } from "@chakra-ui/react";
 import TrackShipment from "C:/Users/16692/Projects/Blockchain-For-Supply-Chain/Blockchain-For-Supply-Chain-1/blockchain-frontend/src/Contracts/TrackShipment.json";
-
-// ① Techy theme
-const theme = extendTheme({
-  styles: {
-    global: {
-      "html, body": {
-        bg: "#0f1117",
-        color: "#f0f2f5",
-        fontFamily: "'Fira Code', monospace",
-      },
-    },
-  },
-  colors: {
-    brand: {
-      500: "#6c63ff",
-    },
-  },
-  fonts: {
-    heading: "'Orbitron', sans-serif",
-    body: "'Fira Code', monospace",
-  },
-});
 
 const CONTRACT_ADDRESS = "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0";
 
@@ -121,12 +96,12 @@ function App() {
   };
 
   return (
-    <ChakraProvider theme={theme}>
-      <Box minH="100vh" p={6}>
-        <VStack spacing={6} maxW="lg" mx="auto" bg="#1f2230" p={8} rounded="xl" shadow="xl">
-          <Heading fontFamily="heading" color="brand.500">
-            🚚 Supply Chain Tracker
-          </Heading>
+ 
+    <Box minH="100vh" display="flex" alignItems="center" justifyContent="center" bg="#0d0d0d" p={6}>
+      <VStack spacing={6} maxW="lg" mx="auto" bg="#1f2230" p={8} rounded="xl" shadow="xl" w="full">
+        <Heading fontFamily="heading" color="brand.500">
+          🚚 Supply Chain Tracker
+        </Heading>
 
           <Button
             onClick={connectWallet}
@@ -160,7 +135,6 @@ function App() {
           <Button colorScheme="purple" w="full" onClick={fetchProductData}>
             Fetch Product & Transactions
           </Button>
-
           {transactions.length > 0 && (
             <Box w="full" bg="#2d3142" p={4} rounded="md" overflowY="auto" maxH="40vh">
               <Heading size="sm" color="brand.500" mb={2}>
@@ -183,7 +157,6 @@ function App() {
           )}
         </VStack>
       </Box>
-    </ChakraProvider>
   );
 }
 
