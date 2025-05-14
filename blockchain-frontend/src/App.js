@@ -1,122 +1,161 @@
 import { useState } from "react";
-import { ethers } from "ethers";
-import "./index.css";
-import SupplyChain from "C:/Users/16692/Projects/Blockchain-For-Supply-Chain/Blockchain-For-Supply-Chain-1/blockchain-frontend/src/Contracts/TrackShipment.json"; // ⬅ Make sure you have this ABI file
+import { BrowserProvider, Contract } from "ethers";
+import {
+  Box,
+  Button,
+  Input,
+  Heading,
+  VStack,
+  Text,
+  useToast,
+} from "@chakra-ui/react";
+import TrackShipment from "C:/Users/16692/Projects/Blockchain-For-Supply-Chain/Blockchain-For-Supply-Chain-1/blockchain-frontend/src/Contracts/TrackShipment.json";
 
-const contractAddress = "0xYourContractAddressHere"; // ⬅ Replace with your deployed contract address
+const contractAddress = "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0"; // Replace this!
 
 function App() {
-  const [walletAddress, setWalletAddress] = useState("");
+  const [wallet, setWallet] = useState("");
   const [shipmentId, setShipmentId] = useState("");
   const [description, setDescription] = useState("");
   const [status, setStatus] = useState("");
+  const toast = useToast();
 
   const connectWallet = async () => {
-    if (window.ethereum) {
-      try {
-        const accounts = await window.ethereum.request({
-          method: "eth_requestAccounts",
-        });
-        setWalletAddress(accounts[0]);
-      } catch (err) {
-        alert("Wallet connection rejected.");
-      }
-    } else {
-      alert("Please install MetaMask.");
-    }
+    if (!window.ethereum) return alert("Install MetaMask");
+
+    const provider = new BrowserProvider(window.ethereum);
+    const accounts = await provider.send("eth_requestAccounts", []);
+    setWallet(accounts[0]);
+    toast({
+      title: "Wallet Connected",
+      description: `${accounts[0]}`,
+      status: "success",
+      duration: 3000,
+      isClosable: true,
+    });
   };
 
   const addShipment = async () => {
     if (!shipmentId || !description) {
-      alert("Please enter both Shipment ID and Description.");
-      return;
+      return toast({
+        title: "Missing Fields",
+        description: "Enter both shipment ID and description",
+        status: "warning",
+        duration: 3000,
+        isClosable: true,
+      });
     }
 
     try {
-      const provider = new ethers.providers.Web3Provider(window.ethereum);
-      const signer = provider.getSigner();
-      const contract = new ethers.Contract(contractAddress, SupplyChain.abi, signer);
+      const provider = new BrowserProvider(window.ethereum);
+      const signer = await provider.getSigner();
+      const contract = new Contract(contractAddress, TrackShipment.abi, signer);
+
       const tx = await contract.addShipment(shipmentId, description);
       await tx.wait();
-      alert("Shipment added successfully!");
-    } catch (error) {
-      console.error(error);
-      alert("Transaction failed.");
+
+      toast({
+        title: "Shipment Added",
+        description: `ID ${shipmentId}`,
+        status: "success",
+        duration: 3000,
+        isClosable: true,
+      });
+
+      setShipmentId("");
+      setDescription("");
+    } catch (err) {
+      console.error(err);
+      toast({
+        title: "Error",
+        description: "Transaction failed",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
     }
   };
 
-  const getShipmentStatus = async () => {
-    if (!shipmentId) {
-      alert("Please enter a Shipment ID.");
-      return;
-    }
+  const checkStatus = async () => {
+    if (!shipmentId) return alert("Enter a shipment ID first");
 
     try {
-      const provider = new ethers.providers.Web3Provider(window.ethereum);
-      const contract = new ethers.Contract(contractAddress, SupplyChain.abi, provider);
+      const provider = new BrowserProvider(window.ethereum);
+      const contract = new Contract(contractAddress, TrackShipment.abi, provider);
       const result = await contract.getShipmentStatus(shipmentId);
       setStatus(result);
-    } catch (error) {
-      console.error(error);
-      alert("Failed to fetch status.");
+    } catch (err) {
+      console.error(err);
+      toast({
+        title: "Error",
+        description: "Failed to fetch status",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
     }
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-tr from-gray-100 to-blue-50 p-4 flex justify-center items-center">
-      <div className="bg-white p-6 rounded-2xl shadow-xl w-full max-w-xl space-y-4">
-        <h1 className="text-3xl font-bold text-center text-blue-700">Supply Chain DApp</h1>
+    <Box minH="100vh" bg="background" px={4} py={10} color="white" fontFamily="body">
+      <Box
+        maxW="lg"
+        mx="auto"
+        p={8}
+        bg="#1f2230"
+        rounded="xl"
+        shadow="xl"
+        border="1px solid #3e4c59"
+      >
+        <VStack spacing={4} align="stretch">
+          <Heading textAlign="center" fontFamily="heading" color="brand.500">
+            🚚 Supply Chain Tracker
+          </Heading>
 
-        <button
-          onClick={connectWallet}
-          className="w-full bg-blue-600 text-white font-semibold py-2 rounded hover:bg-blue-700"
-        >
-          {walletAddress
-            ? `Connected: ${walletAddress.slice(0, 6)}...${walletAddress.slice(-4)}`
-            : "Connect MetaMask"}
-        </button>
+          <Button
+            onClick={connectWallet}
+            colorScheme="brand"
+            variant="outline"
+            fontWeight="bold"
+            fontFamily="body"
+          >
+            {wallet
+              ? `Connected: ${wallet.slice(0, 6)}...${wallet.slice(-4)}`
+              : "Connect MetaMask"}
+          </Button>
 
-        <div className="space-y-2">
-          <input
-            type="text"
+          <Input
             placeholder="Shipment ID"
             value={shipmentId}
             onChange={(e) => setShipmentId(e.target.value)}
-            className="w-full border border-gray-300 px-4 py-2 rounded"
+            bg="white"
+            color="black"
+            _placeholder={{ color: "gray.500" }}
           />
-          <input
-            type="text"
+          <Input
             placeholder="Description"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
-            className="w-full border border-gray-300 px-4 py-2 rounded"
+            bg="white"
+            color="black"
+            _placeholder={{ color: "gray.500" }}
           />
-        </div>
 
-        <div className="flex gap-2">
-          <button
-            onClick={addShipment}
-            className="flex-1 bg-green-500 text-white font-semibold py-2 rounded hover:bg-green-600"
-          >
+          <Button colorScheme="green" onClick={addShipment}>
             Add Shipment
-          </button>
-          <button
-            onClick={getShipmentStatus}
-            className="flex-1 bg-purple-500 text-white font-semibold py-2 rounded hover:bg-purple-600"
-          >
+          </Button>
+          <Button colorScheme="purple" onClick={checkStatus}>
             Check Status
-          </button>
-        </div>
+          </Button>
 
-        {status && (
-          <div className="bg-gray-50 border border-gray-300 rounded p-4 mt-2">
-            <p className="text-lg font-medium text-center">
-              📦 Shipment Status: <span className="text-blue-700">{status}</span>
-            </p>
-          </div>
-        )}
-      </div>
-    </div>
+          {status && (
+            <Box p={4} bg="gray.700" rounded="md" mt={2} textAlign="center">
+              <Text>Status: <strong>{status}</strong></Text>
+            </Box>
+          )}
+        </VStack>
+      </Box>
+    </Box>
   );
 }
 
