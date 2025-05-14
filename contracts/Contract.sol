@@ -27,8 +27,8 @@ mapping(uint => Product) public products;
 
 mapping(uint => Transaction[]) public productTransactions;
 
-function addProduct(uint _ID, uint _Inventory_Level, string memory _Shipment_Status) public {
-    products[_ID] = Product(_ID, _Inventory_Level, _Shipment_Status);
+function addProduct(uint _ID, uint _Inventory_Level) public {
+    products[_ID] = Product(_ID, _Inventory_Level, "On Time");
 }
 function addTransaction(
     uint _productID,
