@@ -62,42 +62,58 @@ function App() {
     toast({ title: "Error", description: err.message, status: "error" });
   }
 };
-const status = inventory > 0 ? "On Time" : "Out of Stock";
+//const status = inventory > 0 ? "On Time" : "Out of Stock";
 
   // ⑤ Fetch product & its transactions
   const fetchProductData = async () => {
-    if (!productId) return alert("Enter product ID");
-    try {
-      const provider = new BrowserProvider(window.ethereum);
-      const contract = new Contract(
-        CONTRACT_ADDRESS,
-        TrackShipment.abi,
-        provider
-      );
-      // auto-generated getter for mapping
-      const p = await contract.products(Number(productId));
-      setInventory(p.Inventory_Level.toString());
+  if (!productId) {
+    toast({ title: "Missing ID", status: "warning" });
+    return;
+  }
 
-      const txs = await contract.getTransactions(Number(productId));
-      // txs is an array of tuples matching your Transaction struct
-      setTransactions(
-        txs.map((t) => ({
-          amount: t.User_Transaction_Amount.toString(),
-          delay: t.Logistics_Delay,
-          reason: t.Logistics_Delay_Reason,
-          time: new Date(t.Timestamp.toNumber() * 1000).toLocaleString(),
-          from: t.sender,
-          to: t.receiver,
-          location: t.location,
-          status: t.Shipment_Status,
-          asset: t.Asset_ID,
-        }))
-      );
-    } catch (err) {
-      console.error(err);
-      toast({ title: "Failed to fetch", description: err.message, status: "error" });
+  try {
+    const provider = new BrowserProvider(window.ethereum);
+    const contract = new Contract(CONTRACT_ADDRESS, TrackShipment.abi, provider);
+
+    const p = await contract.products(Number(productId));
+    console.log("Fetched product:", p);
+
+    if (!p || !p.Inventory_Level) {
+      toast({
+        title: "Product not found",
+        description: "No data returned from contract",
+        status: "warning",
+      });
+      return;
     }
-  };
+
+    setInventory(p.Inventory_Level.toString());
+
+    const txs = await contract.getTransactions(Number(productId));
+    setTransactions(
+      txs.map((t) => ({
+        amount: t.User_Transaction_Amount.toString(),
+        delay: t.Logistics_Delay,
+        reason: t.Logistics_Delay_Reason,
+        time: new Date(t.Timestamp.toNumber() * 1000).toLocaleString(),
+        from: t.sender,
+        to: t.receiver,
+        location: t.location,
+        status: t.Shipment_Status,
+        asset: t.Asset_ID,
+      }))
+    );
+
+    toast({ title: "Product fetched", status: "success" });
+  } catch (err) {
+    console.error(err);
+    toast({
+      title: "Fetch failed",
+      description: err.message,
+      status: "error",
+    });
+  }
+};
 
   return (
  
