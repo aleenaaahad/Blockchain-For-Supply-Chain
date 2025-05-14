@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { ethers } from "ethers";
 import "./index.css";
-import SupplyChain from "./contracts/SupplyChain.json"; // ⬅ Make sure you have this ABI file
+import SupplyChain from "C:/Users/16692/Projects/Blockchain-For-Supply-Chain/Blockchain-For-Supply-Chain-1/blockchain-frontend/src/Contracts/TrackShipment.json"; // ⬅ Make sure you have this ABI file
 
 const contractAddress = "0xYourContractAddressHere"; // ⬅ Replace with your deployed contract address
 
