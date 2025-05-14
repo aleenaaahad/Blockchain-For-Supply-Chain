@@ -31,34 +31,38 @@ function App() {
   };
 
   // ④ Add product
-  const addProduct = async () => {
-    if (!productId || !inventory) {
-      return toast({
-        title: "Missing fields",
-        description: "ID, Inventory & Status required",
-        status: "warning",
-      });
-    }
-    try {
-      const provider = new BrowserProvider(window.ethereum);
-      const signer = await provider.getSigner();
-      const contract = new Contract(
-        CONTRACT_ADDRESS,
-        TrackShipment.abi,
-        signer
-      );
-      const tx = await contract.addProduct(
-        Number(productId),
-        Number(inventory),
-      );
-      await tx.wait();
-      toast({ title: "Product added", status: "success" });
-      setInventory("");
-    } catch (err) {
-      console.error(err);
-      toast({ title: "Error", description: err.message, status: "error" });
-    }
-  };
+ const addProduct = async () => {
+  if (!productId || !inventory) {
+    return toast({
+      title: "Missing fields",
+      description: "ID & Inventory required",
+      status: "warning",
+    });
+  }
+
+  const numericInventory = Number(inventory);
+  const status = numericInventory > 0 ? "On Time" : "Out of Stock";
+
+  try {
+    const provider = new BrowserProvider(window.ethereum);
+    const signer = await provider.getSigner();
+    const contract = new Contract(CONTRACT_ADDRESS, TrackShipment.abi, signer);
+
+    const tx = await contract.addProduct(
+      Number(productId),
+      numericInventory,
+      status
+    );
+    await tx.wait();
+
+    toast({ title: "Product added", status: "success" });
+    setInventory("");
+  } catch (err) {
+    console.error(err);
+    toast({ title: "Error", description: err.message, status: "error" });
+  }
+};
+const status = inventory > 0 ? "On Time" : "Out of Stock";
 
   // ⑤ Fetch product & its transactions
   const fetchProductData = async () => {
