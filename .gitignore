@@ -1,4 +1,9 @@
 node_modules
+<<<<<<< HEAD
+=======
+
+node_modules
+>>>>>>> frontend_final
 .env
 
 # Hardhat files
@@ -15,5 +20,8 @@ node_modules
 
 # Hardhat Ignition default folder for deployments against a local node
 ignition/deployments/chain-31337
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> frontend_final
