@@ -16,6 +16,13 @@ In real-world supply chains, product data is often stored in centralized databas
 - Data manipulation
 - Lack of transparency
 - Difficulty verifying records
+  
+## Requirements
+To run this project locally, you’ll need the following tools installed:
+
+- **Node.js , npm and nvm** – Required to run the frontend and install dependencies
+- **Hardhat** – A development framework to compile, test, and deploy smart contracts on a local blockchain
+- **MetaMask** – A browser extension that acts as a crypto wallet and connects the frontend to the blockchain
 
 ## Note
 
