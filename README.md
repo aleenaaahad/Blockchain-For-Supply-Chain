@@ -1,7 +1,4 @@
-<<<<<<< HEAD
-# Blockchain For Supply Chain
- 
-=======
+
 # Blockchain-Based Supply Chain Tracker
 
 This is a small-scale decentralized application that allows users to add Products to the blockchain using blockchain technology.
@@ -31,4 +28,4 @@ To run this project locally, you’ll need the following tools installed:
 ## Note
 
 This is a small-scale demo intended for local development and demonstration purposes. It uses basic blockchain features and can be expanded with additional functionality such as shipment tracking, QR code integration, and role-based access in future versions.
->>>>>>> eaae67023aeb881d92d337418c47864705cbda14
+
