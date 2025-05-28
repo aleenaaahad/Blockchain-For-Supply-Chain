@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState } from "react";
 import { BrowserProvider, Contract } from "ethers";
 import {
   Box,
@@ -8,19 +8,20 @@ import {
   VStack,
   Text,
   useToast,
-  ChakraProvider, 
 } from "@chakra-ui/react";
-import TrackShipment from "C:/Users/16692/Projects/Blockchain-For-Supply-Chain/Blockchain-For-Supply-Chain-1/artifacts/contracts/Contract.sol/TrackShipment.json"; 
+import TrackShipment from "C:/Users/16692/Projects/Blockchain-For-Supply-Chain/Blockchain-For-Supply-Chain-1/blockchain-frontend/src/Contracts/TrackShipment.json";
 
 const CONTRACT_ADDRESS = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
 
-function AppContent() {
+function App() {
+  // ② Local state
   const [wallet, setWallet] = useState("");
   const [productId, setProductId] = useState("");
   const [inventory, setInventory] = useState("");
   const [transactions, setTransactions] = useState([]);
   const toast = useToast();
 
+  // ③ Connect to MetaMask
   const connectWallet = async () => {
     if (!window.ethereum) return alert("Install MetaMask");
     const provider = new BrowserProvider(window.ethereum);
@@ -29,6 +30,7 @@ function AppContent() {
     toast({ title: "Wallet connected", status: "success" });
   };
 
+  // ④ Add product
   const addProduct = async () => {
     if (!productId || !inventory) {
       return toast({
@@ -60,7 +62,7 @@ function AppContent() {
       toast({ title: "Error", description: err.message, status: "error" });
     }
   };
-
+  // ⑤ Fetch product & its transactions
   const fetchProductData = async () => {
     if (!productId) {
       toast({ title: "Missing ID", status: "warning" });
@@ -72,6 +74,8 @@ function AppContent() {
       const contract = new Contract(CONTRACT_ADDRESS, TrackShipment.abi, provider);
 
       const p = await contract.products(Number(productId));
+      console.log("Fetched product:", p);
+
       if (!p || !p.Inventory_Level) {
         toast({
           title: "Product not found",
@@ -108,16 +112,17 @@ function AppContent() {
       });
     }
   };
-
   return (
+
     <Box minH="100vh" display="flex" alignItems="center" justifyContent="center" bg="#0d0d0d" p={6}>
       <VStack spacing={6} maxW="lg" mx="auto" bg="#1f2230" p={8} rounded="xl" shadow="xl" w="full">
-        <Heading fontFamily="heading" color="white">
+        <Heading fontFamily="heading" color="brand.500">
           🚚 Supply Chain Tracker
         </Heading>
+
         <Button
           onClick={connectWallet}
-          colorScheme="blue"
+          colorScheme="brand"
           variant="outline"
           w="full"
         >
@@ -125,6 +130,8 @@ function AppContent() {
             ? `Connected: ${wallet.slice(0, 6)}…${wallet.slice(-4)}`
             : "Connect MetaMask"}
         </Button>
+
+        {/* Add / update product */}
         <Input
           placeholder="Product ID"
           value={productId}
@@ -170,10 +177,4 @@ function AppContent() {
   );
 }
 
-export default function App() {
-  return (
-    <ChakraProvider>
-      <AppContent />
-    </ChakraProvider>
-  );
-}
+export default App;
