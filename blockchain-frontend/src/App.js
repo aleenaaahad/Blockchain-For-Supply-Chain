@@ -8,9 +8,9 @@ import {
   VStack,
   Text,
   useToast,
-  ChakraProvider, // ✅ Add this
+  ChakraProvider, 
 } from "@chakra-ui/react";
-import TrackShipment from "./Contracts/TrackShipment.json"; // ✅ Use a relative path
+import TrackShipment from "C:/Users/16692/Projects/Blockchain-For-Supply-Chain/Blockchain-For-Supply-Chain-1/artifacts/contracts/Contract.sol/TrackShipment.json"; 
 
 const CONTRACT_ADDRESS = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
 
